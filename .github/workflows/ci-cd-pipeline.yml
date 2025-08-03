@@ -59,7 +59,7 @@ jobs:
           bandit -r todo_cli/ -f json -o bandit-report.json || true
 
       - name: Upload Bandit results
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: bandit-security-report
           path: bandit-report.json
@@ -70,7 +70,7 @@ jobs:
           safety check --json --output safety-report.json || true
 
       - name: Upload Safety results
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: safety-vulnerability-report
           path: safety-report.json
@@ -103,7 +103,7 @@ jobs:
           pytest tests/ --cov=todo_cli --cov-report=xml --cov-report=html --cov-report=term-missing
 
       - name: Upload coverage reports
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: coverage-reports-${{ matrix.python-version }}
           path: |
@@ -142,7 +142,7 @@ jobs:
           python -m build
 
       - name: Upload build artifacts
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: python-package
           path: dist/
@@ -275,7 +275,7 @@ jobs:
           "
 
       - name: Upload documentation
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: documentation
           path: module_docs.txt
