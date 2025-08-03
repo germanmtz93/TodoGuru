@@ -1,0 +1,72 @@
+name: Deployment Demo
+
+on:
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: 'Environment to deploy to'
+        required: true
+        default: 'staging'
+        type: choice
+        options:
+        - staging
+        - production
+
+jobs:
+  deploy:
+    name: Deploy to ${{ github.event.inputs.environment }}
+    runs-on: ubuntu-latest
+    environment: ${{ github.event.inputs.environment }}
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.11"
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -e .
+
+      - name: Run pre-deployment tests
+        run: |
+          pytest tests/ -v
+
+      - name: Build package
+        run: |
+          pip install build
+          python -m build
+
+      - name: Deploy to staging (simulated)
+        if: github.event.inputs.environment == 'staging'
+        run: |
+          echo "🚀 Deploying to staging environment..."
+          echo "Package built successfully:"
+          ls -la dist/
+          echo "Staging deployment completed!"
+
+      - name: Deploy to production (simulated)
+        if: github.event.inputs.environment == 'production'
+        run: |
+          echo "🚀 Deploying to production environment..."
+          echo "Package built successfully:"
+          ls -la dist/
+          echo "Production deployment completed!"
+
+      - name: Post-deployment verification
+        run: |
+          echo "✅ Verifying deployment..."
+          python -m todo_cli.main add "Deployment test task"
+          python -m todo_cli.main list
+          echo "✅ Deployment verification completed!"
+
+      - name: Notify deployment success
+        run: |
+          echo "🎉 Successfully deployed TodoGuru CLI to ${{ github.event.inputs.environment }}!"
+          echo "Environment: ${{ github.event.inputs.environment }}"
+          echo "Deployment time: $(date)"
+          echo "Commit: ${{ github.sha }}" 
