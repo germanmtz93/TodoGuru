@@ -1,0 +1,36 @@
+modules = ["python-3.11"]
+
+[nix]
+channel = "stable-25_05"
+
+[workflows]
+runButton = "Project"
+
+[[workflows.workflow]]
+name = "Project"
+mode = "parallel"
+author = "agent"
+
+[[workflows.workflow.tasks]]
+task = "workflow.run"
+args = "Todo CLI App"
+
+[[workflows.workflow.tasks]]
+task = "workflow.run"
+args = "test_todo_cli"
+
+[[workflows.workflow]]
+name = "Todo CLI App"
+author = "agent"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "python -m todo_cli.main"
+
+[[workflows.workflow]]
+name = "test_todo_cli"
+author = "agent"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "python -m todo_cli.main add \"Buy groceries\""

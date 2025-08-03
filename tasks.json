@@ -1,0 +1,30 @@
+[
+  {
+    "description": "Buy groceries",
+    "done": true
+  },
+  {
+    "description": "Complete homework",
+    "done": true
+  },
+  {
+    "description": "Walk the dog",
+    "done": false
+  },
+  {
+    "description": "Buy groceries",
+    "done": false
+  },
+  {
+    "description": "Buy groceries",
+    "done": false
+  },
+  {
+    "description": "Buy groceries",
+    "done": false
+  },
+  {
+    "description": "My first task",
+    "done": false
+  }
+]
