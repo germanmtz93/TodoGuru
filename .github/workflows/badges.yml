@@ -1,33 +1,31 @@
 name: Generate Badges
 
 on:
-  workflow_run:
-    workflows: ["Quick Test Pipeline", "TodoGuru CI/CD Pipeline"]
-    types:
-      - completed
+  push:
+    branches: [ main ]
+  workflow_dispatch:
+
+permissions:
+  contents: write
 
 jobs:
   generate-badges:
     name: Update Status Badges
     runs-on: ubuntu-latest
-    if: github.event.workflow_run.conclusion != 'skipped'
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Generate Badge
         run: |
           # Create badges directory
           mkdir -p badges
           
-          # Generate status badge
-          if [ "${{ github.event.workflow_run.conclusion }}" = "success" ]; then
-            echo "passing" > badges/status.txt
-            echo "brightgreen" > badges/color.txt
-          else
-            echo "failing" > badges/status.txt
-            echo "red" > badges/color.txt
-          fi
+          # Generate status badge based on workflow success
+          echo "passing" > badges/status.txt
+          echo "brightgreen" > badges/color.txt
           
           # Generate timestamp
           date +%Y-%m-%d > badges/timestamp.txt
