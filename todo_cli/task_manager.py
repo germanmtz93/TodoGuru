@@ -1,5 +1,4 @@
-"""
-Task Manager Module
+"""Task Manager Module.
 
 Handles task operations including loading, saving, adding, listing,
 and marking tasks as done.
@@ -14,21 +13,19 @@ class TaskManager:
     """Manages to-do tasks with persistent storage."""
 
     def __init__(self, data_file: str = "tasks.json"):
-        """
-        Initialize TaskManager with specified data file.
+        """Initialize TaskManager with specified data file.
 
         Args:
-            data_file (str): Path to the JSON file for storing tasks
+            data_file (str): Path to the JSON file for storing tasks.
         """
         self.data_file = data_file
         self.tasks = self._load_tasks()
 
     def _load_tasks(self) -> List[Dict[str, Any]]:
-        """
-        Load tasks from the JSON file.
+        """Load tasks from the JSON file.
 
         Returns:
-            List[Dict[str, Any]]: List of task dictionaries
+            List[Dict[str, Any]]: List of task dictionaries.
         """
         try:
             if os.path.exists(self.data_file):
@@ -53,14 +50,13 @@ class TaskManager:
             raise
 
     def add_task(self, description: str) -> None:
-        """
-        Add a new task to the to-do list.
+        """Add a new task to the to-do list.
 
         Args:
-            description (str): Description of the task to add
+            description (str): Description of the task to add.
 
         Raises:
-            ValueError: If description is empty or only whitespace
+            ValueError: If description is empty or only whitespace.
         """
         if not description or not description.strip():
             raise ValueError("Task description cannot be empty")
@@ -82,14 +78,13 @@ class TaskManager:
             print(f"{index}. [{status_icon}] {task['description']}")
 
     def mark_task_done(self, task_index: int) -> None:
-        """
-        Mark a task as done by its index.
+        """Mark a task as done by its index.
 
         Args:
-            task_index (int): 1-based index of the task to mark as done
+            task_index (int): 1-based index of the task to mark as done.
 
         Raises:
-            ValueError: If task_index is invalid
+            ValueError: If task_index is invalid.
         """
         if not self.tasks:
             raise ValueError("No tasks available to mark as done")
@@ -115,11 +110,10 @@ class TaskManager:
         )
 
     def get_task_count(self) -> Dict[str, int]:
-        """
-        Get count of total, completed, and pending tasks.
+        """Get count of total, completed, and pending tasks.
 
         Returns:
-            Dict[str, int]: Dictionary with counts
+            Dict[str, int]: Dictionary with counts.
         """
         total = len(self.tasks)
         completed = sum(1 for task in self.tasks if task["done"])
@@ -128,14 +122,13 @@ class TaskManager:
         return {"total": total, "completed": completed, "pending": pending}
 
     def remove_task(self, task_index: int) -> None:
-        """
-        Remove a task by its index.
+        """Remove a task by its index.
 
         Args:
-            task_index (int): 1-based index of the task to remove
+            task_index (int): 1-based index of the task to remove.
 
         Raises:
-            ValueError: If task_index is invalid
+            ValueError: If task_index is invalid.
         """
         if not self.tasks:
             raise ValueError("No tasks available to remove")

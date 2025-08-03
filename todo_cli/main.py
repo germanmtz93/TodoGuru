@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
-"""
-To-Do CLI Application
+"""To-Do CLI Application.
+
 A simple command-line interface for managing to-do lists.
 
 Usage:
@@ -16,11 +16,10 @@ from .task_manager import TaskManager
 
 
 def create_parser() -> argparse.ArgumentParser:
-    """
-    Create and configure the argument parser.
+    """Create and configure the argument parser.
 
     Returns:
-        argparse.ArgumentParser: Configured parser
+        argparse.ArgumentParser: Configured parser.
     """
     parser = argparse.ArgumentParser(
         prog="todo-cli",
@@ -54,12 +53,11 @@ def create_parser() -> argparse.ArgumentParser:
 
 
 def handle_add_command(task_manager: TaskManager, description: str) -> None:
-    """
-    Handle the add command.
+    """Handle the add command.
 
     Args:
-        task_manager (TaskManager): TaskManager instance
-        description (str): Task description to add
+        task_manager (TaskManager): TaskManager instance.
+        description (str): Task description to add.
     """
     try:
         task_manager.add_task(description)
@@ -69,22 +67,20 @@ def handle_add_command(task_manager: TaskManager, description: str) -> None:
 
 
 def handle_list_command(task_manager: TaskManager) -> None:
-    """
-    Handle the list command.
+    """Handle the list command.
 
     Args:
-        task_manager (TaskManager): TaskManager instance
+        task_manager (TaskManager): TaskManager instance.
     """
     task_manager.list_tasks()
 
 
 def handle_done_command(task_manager: TaskManager, index: int) -> None:
-    """
-    Handle the done command.
+    """Handle the done command.
 
     Args:
-        task_manager (TaskManager): TaskManager instance
-        index (int): Task index to mark as done
+        task_manager (TaskManager): TaskManager instance.
+        index (int): Task index to mark as done.
     """
     try:
         task_manager.mark_task_done(index)
@@ -94,11 +90,10 @@ def handle_done_command(task_manager: TaskManager, index: int) -> None:
 
 
 def handle_stats_command(task_manager: TaskManager) -> None:
-    """
-    Handle the stats command.
+    """Handle the stats command.
 
     Args:
-        task_manager (TaskManager): TaskManager instance
+        task_manager (TaskManager): TaskManager instance.
     """
     stats = task_manager.get_task_count()
     print("Task Statistics:")

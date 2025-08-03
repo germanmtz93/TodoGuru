@@ -1,5 +1,5 @@
-"""
-To-Do CLI Application Package
+"""To-Do CLI Application Package.
+
 A simple command-line interface for managing to-do lists.
 """
 
