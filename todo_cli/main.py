@@ -11,13 +11,14 @@ Usage:
 
 import argparse
 import sys
+
 from .task_manager import TaskManager
 
 
 def create_parser() -> argparse.ArgumentParser:
     """
     Create and configure the argument parser.
-    
+
     Returns:
         argparse.ArgumentParser: Configured parser
     """
@@ -25,35 +26,37 @@ def create_parser() -> argparse.ArgumentParser:
         prog="todo-cli",
         description="A simple command-line to-do list manager",
         epilog="Examples:\n"
-               "  %(prog)s add \"Buy groceries\"\n"
-               "  %(prog)s list\n"
-               "  %(prog)s done 1",
-        formatter_class=argparse.RawDescriptionHelpFormatter
+        '  %(prog)s add "Buy groceries"\n'
+        "  %(prog)s list\n"
+        "  %(prog)s done 1",
+        formatter_class=argparse.RawDescriptionHelpFormatter,
     )
-    
+
     subparsers = parser.add_subparsers(dest="command", help="Available commands")
-    
+
     # Add command
     add_parser = subparsers.add_parser("add", help="Add a new task")
     add_parser.add_argument("description", help="Description of the task to add")
-    
+
     # List command
     subparsers.add_parser("list", help="List all tasks")
-    
+
     # Done command
     done_parser = subparsers.add_parser("done", help="Mark a task as done")
-    done_parser.add_argument("index", type=int, help="Index of the task to mark as done")
-    
+    done_parser.add_argument(
+        "index", type=int, help="Index of the task to mark as done"
+    )
+
     # Stats command (bonus feature)
     subparsers.add_parser("stats", help="Show task statistics")
-    
+
     return parser
 
 
 def handle_add_command(task_manager: TaskManager, description: str) -> None:
     """
     Handle the add command.
-    
+
     Args:
         task_manager (TaskManager): TaskManager instance
         description (str): Task description to add
@@ -68,7 +71,7 @@ def handle_add_command(task_manager: TaskManager, description: str) -> None:
 def handle_list_command(task_manager: TaskManager) -> None:
     """
     Handle the list command.
-    
+
     Args:
         task_manager (TaskManager): TaskManager instance
     """
@@ -78,7 +81,7 @@ def handle_list_command(task_manager: TaskManager) -> None:
 def handle_done_command(task_manager: TaskManager, index: int) -> None:
     """
     Handle the done command.
-    
+
     Args:
         task_manager (TaskManager): TaskManager instance
         index (int): Task index to mark as done
@@ -93,12 +96,12 @@ def handle_done_command(task_manager: TaskManager, index: int) -> None:
 def handle_stats_command(task_manager: TaskManager) -> None:
     """
     Handle the stats command.
-    
+
     Args:
         task_manager (TaskManager): TaskManager instance
     """
     stats = task_manager.get_task_count()
-    print(f"Task Statistics:")
+    print("Task Statistics:")
     print(f"  Total tasks: {stats['total']}")
     print(f"  Completed: {stats['completed']}")
     print(f"  Pending: {stats['pending']}")
@@ -108,15 +111,15 @@ def main() -> None:
     """Main entry point for the CLI application."""
     parser = create_parser()
     args = parser.parse_args()
-    
+
     # If no command is provided, show help
     if not args.command:
         parser.print_help()
         sys.exit(1)
-    
+
     # Initialize task manager
     task_manager = TaskManager()
-    
+
     # Route to appropriate command handler
     try:
         if args.command == "add":
