@@ -3,14 +3,12 @@ name: Local SonarQube Analysis
 on:
   push:
     branches: [ main, develop ]
-  pull_request:
-    branches: [ main, develop ]
   workflow_dispatch:
 
 jobs:
   sonarqube-local:
     name: Local SonarQube Analysis
-    runs-on: self-hosted  # Requires self-hosted runner with access to local SonarQube
+    runs-on: ubuntu-latest  # Using GitHub-hosted runner
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
