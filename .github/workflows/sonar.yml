@@ -57,12 +57,18 @@ jobs:
           -Dsonar.sources=todo_cli
           -Dsonar.tests=tests
           -Dsonar.python.version=3.11
-          -Dsonar.projectKey=todoguru
+          -Dsonar.projectKey=germanmtz93_TodoGuru
           -Dsonar.projectName=TodoGuru
           -Dsonar.projectVersion=1.0.0
+          -Dsonar.qualitygate.wait=true
+          -Dsonar.qualitygate.timeout=300
+          -Dsonar.scm.provider=git
+          -Dsonar.scm.revision=${{ github.sha }}
         
     - name: SonarQube Quality Gate check
       uses: SonarSource/sonarqube-quality-gate-action@master
       env:
         SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
+      with:
+        scanMetadataReportFile: .scannerwork/report-task.txt
