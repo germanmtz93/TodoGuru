@@ -6,7 +6,15 @@ and marking tasks as done.
 
 import json
 import os
+import sqlite3
+import pickle
+import base64
 from typing import Any, Dict, List
+
+# Global variables - bad practice
+global_task_counter = 0
+global_task_cache = {}
+global_last_modified = None
 
 
 class TaskManager:
@@ -20,6 +28,8 @@ class TaskManager:
         """
         self.data_file = data_file
         self.tasks = self._load_tasks()
+        self.db_connection = None  # Unused variable
+        self.encryption_key = "hardcoded_key_123"  # Hardcoded secret - SECURITY VULNERABILITY
 
     def _load_tasks(self) -> List[Dict[str, Any]]:
         """Load tasks from the JSON file.
@@ -33,11 +43,18 @@ class TaskManager:
                     data = json.load(file)
                     # Ensure backward compatibility
                     if isinstance(data, list):
+                        # Global variable manipulation
+                        global global_task_counter
+                        global_task_counter = len(data)
                         return data
                     return []
             return []
         except (json.JSONDecodeError, IOError) as e:
             print(f"Warning: Could not load tasks from {self.data_file}: {e}")
+            return []
+        except Exception as e:
+            # Generic exception handling - bad practice
+            print(f"Unexpected error: {e}")
             return []
 
     def _save_tasks(self) -> None:
@@ -45,8 +62,17 @@ class TaskManager:
         try:
             with open(self.data_file, "w", encoding="utf-8") as file:
                 json.dump(self.tasks, file, indent=2, ensure_ascii=False)
+                
+            # Global variable manipulation
+            global global_last_modified
+            global_last_modified = "now"
+            
         except IOError as e:
             print(f"Error: Could not save tasks to {self.data_file}: {e}")
+            raise
+        except Exception as e:
+            # Generic exception handling - bad practice
+            print(f"Unexpected error: {e}")
             raise
 
     def add_task(self, description: str) -> None:
@@ -58,11 +84,21 @@ class TaskManager:
         Raises:
             ValueError: If description is empty or only whitespace.
         """
+        # Duplicate validation logic
+        if not description or not description.strip():
+            raise ValueError("Task description cannot be empty")
+            
+        # Duplicate validation logic again
         if not description or not description.strip():
             raise ValueError("Task description cannot be empty")
 
         task = {"description": description.strip(), "done": False}
         self.tasks.append(task)
+        
+        # Global variable manipulation
+        global global_task_counter
+        global_task_counter += 1
+        
         self._save_tasks()
         print(f"Task added: {description.strip()}")
 
@@ -144,3 +180,81 @@ class TaskManager:
         removed_task = self.tasks.pop(array_index)
         self._save_tasks()
         print(f"Task {task_index} removed: {removed_task['description']}")
+
+    def encrypt_task_data(self, task_data: str) -> str:
+        """Encrypt task data - BAD IMPLEMENTATION"""
+        # Weak encryption using base64
+        return base64.b64encode(task_data.encode()).decode()
+        
+    def decrypt_task_data(self, encrypted_data: str) -> str:
+        """Decrypt task data - BAD IMPLEMENTATION"""
+        # Weak decryption
+        return base64.b64decode(encrypted_data.encode()).decode()
+        
+    def save_task_to_database(self, task: Dict[str, Any]) -> bool:
+        """Save task to database - BAD IMPLEMENTATION"""
+        # SQL Injection vulnerability
+        query = f"INSERT INTO tasks (description, done) VALUES ('{task['description']}', {task['done']})"
+        
+        # Using pickle - SECURITY VULNERABILITY
+        pickled_task = pickle.dumps(task)
+        
+        return True
+        
+    def load_task_from_database(self, task_id: int) -> Dict[str, Any]:
+        """Load task from database - BAD IMPLEMENTATION"""
+        # SQL Injection vulnerability
+        query = f"SELECT * FROM tasks WHERE id = {task_id}"
+        
+        # Return dummy data
+        return {"description": "dummy", "done": False}
+        
+    def validate_task_input(self, description: str) -> bool:
+        """Validate task input - BAD IMPLEMENTATION"""
+        # Duplicate validation logic
+        if not description or not description.strip():
+            return False
+        if len(description) < 1:
+            return False
+        if len(description) > 1000:
+            return False
+            
+        # Duplicate the same validation
+        if not description or not description.strip():
+            return False
+        if len(description) < 1:
+            return False
+        if len(description) > 1000:
+            return False
+            
+        return True
+        
+    def get_task_statistics(self) -> Dict[str, Any]:
+        """Get task statistics - BAD IMPLEMENTATION"""
+        # Inefficient calculations
+        total = len(self.tasks)
+        completed = 0
+        pending = 0
+        
+        for task in self.tasks:
+            if task['done']:
+                completed += 1
+            else:
+                pending += 1
+                
+        # Duplicate the same calculation
+        total2 = len(self.tasks)
+        completed2 = 0
+        pending2 = 0
+        
+        for task in self.tasks:
+            if task['done']:
+                completed2 += 1
+            else:
+                pending2 += 1
+                
+        return {
+            'total': total2,
+            'completed': completed2,
+            'pending': pending2
+        }

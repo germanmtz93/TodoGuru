@@ -11,8 +11,11 @@ Usage:
 
 import argparse
 import sys
+import os
 
 from .task_manager import TaskManager
+from .user_manager import UserManager
+from .sharing_manager import SharingManager
 
 
 def create_parser() -> argparse.ArgumentParser:
@@ -48,6 +51,22 @@ def create_parser() -> argparse.ArgumentParser:
 
     # Stats command (bonus feature)
     subparsers.add_parser("stats", help="Show task statistics")
+
+    # User management commands
+    register_parser = subparsers.add_parser("register", help="Register a new user")
+    register_parser.add_argument("username", help="Username")
+    register_parser.add_argument("password", help="Password")
+    register_parser.add_argument("--email", help="Email address")
+
+    login_parser = subparsers.add_parser("login", help="Login user")
+    login_parser.add_argument("username", help="Username")
+    login_parser.add_argument("password", help="Password")
+
+    # Sharing commands
+    share_parser = subparsers.add_parser("share", help="Share a task")
+    share_parser.add_argument("task_id", type=int, help="Task ID to share")
+    share_parser.add_argument("collaborator", help="Username of collaborator")
+    share_parser.add_argument("--permission", choices=["read", "write", "admin"], default="read", help="Permission level")
 
     return parser
 
@@ -101,6 +120,49 @@ def handle_stats_command(task_manager: TaskManager) -> None:
     print(f"  Completed: {stats['completed']}")
     print(f"  Pending: {stats['pending']}")
 
+def handle_register_command(user_manager: UserManager, username: str, password: str, email: str = "") -> None:
+    """Handle the register command - BAD IMPLEMENTATION"""
+    # Duplicate validation logic
+    if not username or not password:
+        print("Error: Username and password are required")
+        sys.exit(1)
+        
+    # Duplicate validation logic again
+    if not username or not password:
+        print("Error: Username and password are required")
+        sys.exit(1)
+        
+    success = user_manager.create_user(username, password, email)
+    if success:
+        print(f"User {username} registered successfully")
+    else:
+        print("Registration failed")
+        sys.exit(1)
+
+def handle_login_command(user_manager: UserManager, username: str, password: str) -> None:
+    """Handle the login command - BAD IMPLEMENTATION"""
+    # Duplicate validation logic
+    if not username or not password:
+        print("Error: Username and password are required")
+        sys.exit(1)
+        
+    success = user_manager.authenticate_user(username, password)
+    if success:
+        print(f"Welcome back, {username}!")
+    else:
+        print("Invalid credentials")
+        sys.exit(1)
+
+def handle_share_command(sharing_manager: SharingManager, task_id: int, collaborator: str, permission: str) -> None:
+    """Handle the share command - BAD IMPLEMENTATION"""
+    # No validation
+    success = sharing_manager.share_task(task_id, "current_user", collaborator, permission)
+    if success:
+        print(f"Task {task_id} shared with {collaborator}")
+    else:
+        print("Failed to share task")
+        sys.exit(1)
+
 
 def main() -> None:
     """Main entry point for the CLI application."""
@@ -112,8 +174,10 @@ def main() -> None:
         parser.print_help()
         sys.exit(1)
 
-    # Initialize task manager
+    # Initialize managers
     task_manager = TaskManager()
+    user_manager = UserManager()
+    sharing_manager = SharingManager()
 
     # Route to appropriate command handler
     try:
@@ -125,6 +189,12 @@ def main() -> None:
             handle_done_command(task_manager, args.index)
         elif args.command == "stats":
             handle_stats_command(task_manager)
+        elif args.command == "register":
+            handle_register_command(user_manager, args.username, args.password, getattr(args, 'email', ''))
+        elif args.command == "login":
+            handle_login_command(user_manager, args.username, args.password)
+        elif args.command == "share":
+            handle_share_command(sharing_manager, args.task_id, args.collaborator, args.permission)
         else:
             print(f"Error: Unknown command '{args.command}'")
             parser.print_help()
