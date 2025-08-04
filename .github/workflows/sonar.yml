@@ -33,6 +33,19 @@ jobs:
         coverage run -m unittest discover tests
         coverage xml -o coverage.xml
     
+    - name: Validate SonarQube Configuration
+      run: |
+        if [ -z "${{ secrets.SONAR_TOKEN }}" ]; then
+          echo "❌ SONAR_TOKEN secret is not set"
+          exit 1
+        fi
+        if [ -z "${{ secrets.SONAR_HOST_URL }}" ]; then
+          echo "❌ SONAR_HOST_URL secret is not set"
+          exit 1
+        fi
+        echo "✅ SonarQube configuration validated"
+        echo "Host URL: ${{ secrets.SONAR_HOST_URL }}"
+    
     - name: SonarQube Scan
       uses: SonarSource/sonarqube-scan-action@master
       env:
@@ -44,6 +57,9 @@ jobs:
           -Dsonar.sources=todo_cli
           -Dsonar.tests=tests
           -Dsonar.python.version=3.11
+          -Dsonar.projectKey=todoguru
+          -Dsonar.projectName=TodoGuru
+          -Dsonar.projectVersion=1.0.0
         
     - name: SonarQube Quality Gate check
       uses: SonarSource/sonarqube-quality-gate-action@master
