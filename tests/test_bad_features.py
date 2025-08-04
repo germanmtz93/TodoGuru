@@ -20,8 +20,8 @@ class TestBadFeatures(unittest.TestCase):
     def setUp(self):
         """Set up test fixtures - BAD IMPLEMENTATION"""
         # Global variable manipulation in tests
-        global global_user_data
-        global_user_data = {}
+        # Note: global_user_data is defined in user_manager module
+        # We'll access it through the module instead
         
         # Create test files
         with open('test_passwords.txt', 'w') as f:

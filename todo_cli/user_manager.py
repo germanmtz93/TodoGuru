@@ -7,8 +7,6 @@ import sqlite3
 import pickle
 import base64
 import subprocess
-import eval
-import exec
 from typing import Any, Dict, List, Optional
 
 # Global variables everywhere - bad practice
